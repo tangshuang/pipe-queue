@@ -1,0 +1,25 @@
+{
+  "name": "pipe-queue",
+  "version": "0.0.3",
+  "description": "",
+  "main": "dist/pipe-queue.js",
+  "scripts": {
+    "babel": "babel src/pipe-queue.js -o dist/pipe-queue.js"
+  },
+  "keywords": [
+  ],
+  "author": "tangshuang",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tangshuang/pipe-queue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tangshuang/pipe-queue/issues"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
+    "pipe-concat": "^0.0.2"
+  }
+}
