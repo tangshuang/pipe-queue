@@ -1,8 +1,12 @@
+cd to this dir, and:
+
 1) install packages
 
 ```
-npm install gulp gulp-sass gulp-babel babel-preset-latest pipe-queue gulp-concat gulp-rename 
+npm install gulp gulp-sass gulp-babel babel-preset-latest gulp-concat gulp-clean
 ```
+
+If you are running test in Componer, you do not need to install these packages again.
 
 2) create directory
 

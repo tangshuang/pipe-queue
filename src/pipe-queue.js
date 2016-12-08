@@ -1,62 +1,61 @@
-import {Stream} from 'stream';
-import concat from 'pipe-concat';
+import {Stream} from 'stream'
+import concat from 'pipe-concat'
 
-var queue = [];
-var finish;
-var done;
+var queue = []
+var finish
+var done
 
-export default class PipeQueue {
+class PipeQueue {
 	constructor() {}
-	when(argument,...streams) {
+	when(argument, ...streams) {
 		// if the first argument is function
 		if(typeof argument === 'function') {
-			var factory = argument;
-			factory(this.next.bind(this),concat);
-			return this;
+			var factory = argument
+			factory(this.next.bind(this), concat)
+			return this
 		}
 
 		// if the arguments are all streams
-		var streams = [argument,...streams];
-		concat(streams).on('end',() => {
-			this.next();
-		});
+		var streams = [argument, ...streams]
+		concat(streams).on('end', () => this.next())
 
-		return this;
+		return this
 	}
 	then(factory) {
 		if(typeof factory === 'function') {
-			queue.push(factory);
+			queue.push(factory)
 		}
 
-		return this;
+		return this
 	}
 	end(factory) {
-		finish = factory;
+		finish = factory
 
-		return this;
+		return this
 	}
 	next() {
 		if(queue.length > 0) {
-			var factory = queue.shift();
+			var factory = queue.shift()
 			if(typeof factory === 'function') {
-				factory(this.next.bind(this),concat);
+				factory(this.next.bind(this), concat)
 			}
 		}
 		else {
 			if(typeof finish === 'function') {
-				finish();
+				finish()
 			}
 			if(typeof done === 'function') {
-				done();
+				done()
 			}
 		}
-		return this;
+		return this
 	}
 	promise() {
-		return new Promise((resolve, reject)=> {
-			done = resolve;
-		});
+		return new Promise((resolve, reject) => {
+			done = resolve
+		})
 	}
 }
 
-module.exports = PipeQueue;
+export default PipeQueue
+module.exports = PipeQueue

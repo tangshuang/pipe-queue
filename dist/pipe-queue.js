@@ -46,7 +46,7 @@ var PipeQueue = function () {
 			// if the arguments are all streams
 			var streams = [argument].concat(_toConsumableArray(streams));
 			(0, _pipeConcat2.default)(streams).on('end', function () {
-				_this.next();
+				return _this.next();
 			});
 
 			return this;
@@ -98,6 +98,5 @@ var PipeQueue = function () {
 }();
 
 exports.default = PipeQueue;
-
 
 module.exports = PipeQueue;

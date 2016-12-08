@@ -209,12 +209,4 @@ gulp.task('default',() => {
 
 ## Development
 
-If you are a developer and want to contribute to source code, just git clone from [here](https://github.com/tangshuang/pipe-queue).
-
-After you edit the code, run (babel-cli dependenced)
-
-```
-npm run babel
-```
-
-to build.
+This package is written by ES6, use [componer](https://github.com/tangshuang/componer) to build source code.
