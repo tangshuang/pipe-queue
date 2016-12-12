@@ -5,12 +5,15 @@ var babel = require('gulp-babel')
 var concat = require('gulp-concat')
 var clean = require("gulp-clean")
 
-gulp.task('default',() => {
+gulp.task('default', function() {
 	var $queue = new PipeQueue()
 	
-	$queue.when(function(next) {
+	console.log("begging::")
+
+	return $queue.when(function(next) {
 		gulp.src("dist", {read: false}).pipe(clean()).pipe(gulp.dest(".")).on("end", next)
-	}).then(function(next, merge) {
+	})
+	.then(function(next, merge) {
 		// transform ES6 code to ES5 code
 		var stream1 = gulp.src('src/**/*.js')
 					  .pipe(babel({presets:['latest']}))
@@ -21,7 +24,8 @@ gulp.task('default',() => {
 					  .pipe(gulp.dest('dist/css'))
 
 		merge(stream1,stream2).on('end',next)
-	}).then(function(next, merge) {
+	})
+	.then(function(next, merge) {
 		// concat js together
 		var stream1 = gulp.src('dist/js/*.js')
 						  .pipe(concat('main.js'))
@@ -32,9 +36,12 @@ gulp.task('default',() => {
 						  .pipe(gulp.dest('dist'))
 
 		merge(stream1,stream2).on('end',next)
-	}).end(function() {
+	})
+	.end(function() {
 		console.log('finished!')
 	})
-
-	return $queue.promise()
+	.stream()
+	.on("end", function() {
+		console.log("completely ended!")
+	})
 })

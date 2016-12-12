@@ -207,6 +207,23 @@ gulp.task('default',() => {
 
 **Notice:** whenever you use pipe-queue, you should call `next` in `then()` callback function. If you don't do this, promise will not be resolved, and your task will never be end.
 
+#### .stream()
+
+Not only `.promise()` but also `.steam()` are provided to be more smart in gulp.
+
+If you want `pipe-queue` to return a stream, just like `.pipe` do, you can return a `.stream()` to convert the result to be a stream.
+
+```
+var PipeQueue = require('pipe-queue');
+gulp.task('default',() => {
+	var $queue = new PipeQueue();
+	$queue.when(...).then(...)...
+	return $queue.stream();
+});
+```
+**Notice:** whenever you use pipe-queue, you should call `next` in `then()` callback function. If you don't do this, stream will not emit a `end` event, and your task will never be end.
+
+
 ## Development
 
 This package is written by ES6, use [componer](https://github.com/tangshuang/componer) to build source code.

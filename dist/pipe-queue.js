@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _stream = require('stream');
+var _stream2 = require("stream");
 
-var _pipeConcat = require('pipe-concat');
+var _pipeConcat = require("pipe-concat");
 
 var _pipeConcat2 = _interopRequireDefault(_pipeConcat);
 
@@ -21,14 +21,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var queue = [];
 var finish;
 var done;
+var _stream;
 
 var PipeQueue = function () {
 	function PipeQueue() {
 		_classCallCheck(this, PipeQueue);
+
+		_stream = new _stream2.Stream();
+		_stream.setMaxListeners(0);
+		_stream.writable = _stream.readable = true;
 	}
 
 	_createClass(PipeQueue, [{
-		key: 'when',
+		key: "when",
 		value: function when(argument) {
 			var _this = this;
 
@@ -37,7 +42,7 @@ var PipeQueue = function () {
 			}
 
 			// if the first argument is function
-			if (typeof argument === 'function') {
+			if (typeof argument === "function") {
 				var factory = argument;
 				factory(this.next.bind(this), _pipeConcat2.default);
 				return this;
@@ -45,52 +50,58 @@ var PipeQueue = function () {
 
 			// if the arguments are all streams
 			var streams = [argument].concat(_toConsumableArray(streams));
-			(0, _pipeConcat2.default)(streams).on('end', function () {
+			(0, _pipeConcat2.default)(streams).on("end", function () {
 				return _this.next();
 			});
 
 			return this;
 		}
 	}, {
-		key: 'then',
+		key: "then",
 		value: function then(factory) {
-			if (typeof factory === 'function') {
+			if (typeof factory === "function") {
 				queue.push(factory);
 			}
 
 			return this;
 		}
 	}, {
-		key: 'end',
+		key: "end",
 		value: function end(factory) {
 			finish = factory;
 
 			return this;
 		}
 	}, {
-		key: 'next',
+		key: "next",
 		value: function next() {
 			if (queue.length > 0) {
 				var factory = queue.shift();
-				if (typeof factory === 'function') {
+				if (typeof factory === "function") {
 					factory(this.next.bind(this), _pipeConcat2.default);
 				}
 			} else {
-				if (typeof finish === 'function') {
+				if (typeof finish === "function") {
 					finish();
 				}
-				if (typeof done === 'function') {
+				if (typeof done === "function") {
 					done();
 				}
+				_stream.emit("end");
 			}
 			return this;
 		}
 	}, {
-		key: 'promise',
+		key: "promise",
 		value: function promise() {
 			return new Promise(function (resolve, reject) {
 				done = resolve;
 			});
+		}
+	}, {
+		key: "stream",
+		value: function stream() {
+			return _stream;
 		}
 	}]);
 

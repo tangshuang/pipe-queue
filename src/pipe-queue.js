@@ -1,13 +1,17 @@
 import {Stream} from "stream"
 import concat from "pipe-concat"
-import EventEmitter from "events"
 
 var queue = []
 var finish
 var done
+var stream
 
-class PipeQueue extends EventEmitter {
-	constructor() {}
+class PipeQueue {
+	constructor() {
+		stream = new Stream();
+		stream.setMaxListeners(0);
+		stream.writable = stream.readable = true;
+	}
 	when(argument, ...streams) {
 		// if the first argument is function
 		if(typeof argument === "function") {
@@ -40,8 +44,6 @@ class PipeQueue extends EventEmitter {
 			if(typeof factory === "function") {
 				factory(this.next.bind(this), concat)
 			}
-
-			this.emit("next")
 		}
 		else {
 			if(typeof finish === "function") {
@@ -50,8 +52,7 @@ class PipeQueue extends EventEmitter {
 			if(typeof done === "function") {
 				done()
 			}
-
-			this.emit("end")
+			stream.emit("end")
 		}
 		return this
 	}
@@ -59,6 +60,9 @@ class PipeQueue extends EventEmitter {
 		return new Promise((resolve, reject) => {
 			done = resolve
 		})
+	}
+	stream() {
+		return stream
 	}
 }
 
